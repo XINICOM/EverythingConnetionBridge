@@ -18,25 +18,25 @@ namespace ECB_ConsoleTest
             switch (arg)
             {
                 case 'j':
-                    {
-                        Jumpable = true;
-                        break;
-                    }
+                {
+                    Jumpable = true;
+                    break;
+                }
                 case 'p':
-                    {
-                        Path = true;
-                        break;
-                    }
+                {
+                    Path = true;
+                    break;
+                }
                 case 's':
-                    {
-                        Size = true;
-                        break;
-                    }
+                {
+                    Size = true;
+                    break;
+                }
                 case 'd':
-                    {
-                        DateModified = true;
-                        break;
-                    }
+                {
+                    DateModified = true;
+                    break;
+                }
             }
         }
     };
@@ -51,7 +51,7 @@ namespace ECB_ConsoleTest
             string? prompt = null;
             if (args.Length >= 1)
             {
-                char[] arguments = args.Where(s => s.StartsWith('-')).SelectMany(s => s.Replace("-", "")).Distinct().ToArray();
+                char[] arguments = [.. args.Where(s => s.StartsWith('-')).SelectMany(s => s.Replace("-", "")).Distinct()];
                 foreach (var arg in arguments)
                     config.Set(arg);
                 prompt = args.First(s => !s.StartsWith('-'));
@@ -84,12 +84,16 @@ namespace ECB_ConsoleTest
                 ConsoleTable table = new("File Name");
 
                 List<String> newColumns = [];
-                if (config.Path) newColumns.Add("Path");
-                if (config.Size) newColumns.Add("Size");
-                if (config.DateModified) newColumns.Add("Date Modified");
-                if (newColumns.Count() != 0) table.AddColumn(newColumns);
+                if (config.Path)
+                    newColumns.Add("Path");
+                if (config.Size)
+                    newColumns.Add("Size");
+                if (config.DateModified)
+                    newColumns.Add("Date Modified");
+                if (newColumns.Count != 0)
+                    table.AddColumn(newColumns);
 
-                for (uint i = 0; i < total; i++)
+                for (uint i = 0 ; i < total ; i++)
                 {
                     var rowData = new List<object> { Marshal.PtrToStringUni(ECB.GetResultFileName(i)) ?? String.Empty };
 
@@ -97,7 +101,8 @@ namespace ECB_ConsoleTest
                     {
                         StringBuilder sb = new(260);
                         ECB.GetResultFullPathName(i, sb, 260);
-                        if (config.Path) rowData.Add(sb.ToString());
+                        if (config.Path)
+                            rowData.Add(sb.ToString());
                     }
 
                     if (config.Size)
@@ -113,7 +118,7 @@ namespace ECB_ConsoleTest
                         rowData.Add(DateTime.FromFileTime(date_modified).ToString("yyyy/MM/dd HH:mm"));
                     }
 
-                    table.AddRow(rowData.ToArray());
+                    table.AddRow([.. rowData]);
                 }
 
                 if (total > 0)
@@ -121,7 +126,7 @@ namespace ECB_ConsoleTest
             }
             else
             {
-                for (uint i = 0; i < total; i++)
+                for (uint i = 0 ; i < total ; i++)
                 {
                     bool isFile = ECB.IsFileResult(i);
                     if (!isFile)
