@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="ECB_ConsoleTest/ECB_ConsoleTest.csproj" />
+  <Project Path="EverythingConnetionBridge/EverythingConnetionBridge.csproj" />
+</Solution>
